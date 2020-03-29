@@ -1,0 +1,47 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block page_level_css %}
+{% endblock %}
+{% block page_level_js %}
+{% endblock %}
+
+{% block title %} API {% endblock %}
+{% block active_index %}nav-link{% endblock %}
+{% block active_add_post %}nav-link{% endblock %}
+{% block active_api %}nav-link active{% endblock %}
+{% block content-body %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="bg-primary white">
+            <tr>
+                <th>#</th>
+                <th>URLs</th>
+                <th>Mô tả</th>
+                <th>Ghi chú</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>{% url 'blog:dashboard:search-post' %}</td>
+                <td>Tìm kiếm thông tin bài đăng</td>
+                <td>
+                    method <b>GET</b>
+                    <br>
+                    param <b>?text_search=</b>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>{% url 'blog:dashboard:get-content-quick-view' %}</td>
+                <td>Lấy nội dung để hiển thị nhanh</td>
+                <td>
+                    method <b>GET</b>
+                    <br>
+                    param <b>?uuid=</b>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
