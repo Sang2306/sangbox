@@ -43,10 +43,10 @@ def change_pwd(request):
 
 
 def reset_password(request):
-    send_mail(
-        subject="Testing thoi",
-        message='hello ban sang',
-        from_email=settings.EMAIL_HOST_USER,
-        recipient_list=['sang.tanhle@gmail.com'],
-    )
+    #send_mail(
+    #    subject="Testing thoi",
+    #    message='hello ban sang',
+    #    from_email=settings.EMAIL_HOST_USER,
+    #    recipient_list=['sang.tanhle@gmail.com'],
+    #)
     return HttpResponseGone()
