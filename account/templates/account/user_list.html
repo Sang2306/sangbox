@@ -1,0 +1,76 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block page_level_css %}
+{% endblock %}
+{% block page_level_js %}
+{% endblock %}
+
+{% block title %} Người dùng {% endblock %}
+{% block active_index %}nav-link{% endblock %}
+{% block active_add_post %}nav-link{% endblock %}
+{% block active_api %}nav-link{% endblock %}
+{% block active_user_list %}nav-link active{% endblock %}
+{% block content-body %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <div class="m-1">
+        <fieldset class="form-group d-inline float-right">
+            <form action="{% url 'account:add-user' %}" method="post" id="quick-add">
+                {% csrf_token %}
+                <label for="username" hidden></label>
+                <input type="text" placeholder="Tên người dùng"
+                       class="form-control" id="username" name="username" required>
+                <label for="password" hidden></label>
+                <input type="password" placeholder="Mật khẩu" class="form-control"
+                       id="password" name="password" required>
+            </form>
+        </fieldset>
+        <button type="submit" form="quick-add" class="btn btn-primary float-right btn-min-width mr-1 mb-1">
+            <i class="la la-plus"></i> Thêm user
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="bg-info white">
+            <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>Tên</th>
+                <th>Họ</th>
+                <th>Chức năng</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% spaceless %}
+                {% for user in users %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>
+                            {{ user.username }}
+                            {% if user.is_active %}
+                                <span class="badge badge-glow badge-pill bg-success">Đang hoạt động</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ user.first_name }}</td>
+                        <td>{{ user.last_name }}</td>
+                        <td>{% if user.is_superuser %}Quản trị viên{% elif user.is_staff %}Nhân viên{% endif %}</td>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                {% endfor %}
+            {% endspaceless %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th scope="row">Số lượng</th>
+                    <td>{{ users|length }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+{% endblock %}

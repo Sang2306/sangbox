@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="{{ title }}">
+    <meta name="keywords" content="{{ title }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'app-assets/images/ico/logo.ico' %}">
+    <title>{{ title }}</title>
+    <style>
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 10%;
+        }
+    </style>
+</head>
+<body>
+<h1>{{ tiltle }}</h1>
+{{ html|safe }}
+<footer>
+    <a href="{% url 'blog:dashboard:list-articles' %}">
+        <img src="{% static 'app-assets/images/logo/logo.png' %}" alt="branding-logo" class="center">
+    </a>
+</footer>
+</body>
+</html>
