@@ -234,10 +234,10 @@
             },
         });
         let change_share_status = function (element) {
-            console.log(element)
             $.ajax({
                 url: "{% url 'blog:dashboard:tweak-sharing' %}",
                 method: "GET",
+                cache: false,
                 data:{
                     'uuid': element.dataset.value,
                     'share': element.checked
