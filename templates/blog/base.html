@@ -73,7 +73,7 @@
                         <li class="nav-item"><a class="{% block active_add_post %}nav-link{% endblock %}" href="{% url 'blog:dashboard:add-article' %}">Thêm bài
                             viết</a></li>
                         <li class="nav-item"><a class="{% block active_api %}nav-link{% endblock %}" href="{% url 'blog:dashboard:api' %}">API</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Người dùng</a></li>
+                        <li class="nav-item"><a class="{% block active_user_list %}nav-link{% endblock %}" href="{% url 'account:list-user' %}">Người dùng</a></li>
                         <li class="nav-item">
                             <a class="nav-link" onclick="$('.nav-link.tool-item').remove()">
                                 <div data-toolbar="user-options" data-toolbar-style="dark"><i class="ft-settings"></i></div>

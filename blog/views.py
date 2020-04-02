@@ -1,7 +1,9 @@
-import logging
+from datetime import tzinfo
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from django.http import HttpResponseGone
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls.base import reverse
@@ -31,12 +33,34 @@ def edit_article(request, *args, **kwargs):
     # particular article base on its slugify title
     slug_title = kwargs.get('title')
     article = Articles.objects.get(slug=slug_title)
-    # list article
-    articles = Articles.objects.values(
-        'uuid', 'title', 'publish_date', 'slug', 'owner__username'
-    )
-    context = {'editing_article': article, 'articles': articles}
+    if article.owner == request.user:
+        context = {'editing_article': article}
+        return render(request=request, template_name=template_name, context=context)
+    return redirect(to='blog:dashboard:view-article', title=slug_title)
+
+
+def view_article(request, **kwargs):
+    template_name = 'blog/readonly-article.html'
+    # particular article base on its slugify title
+    slug_title = kwargs.get('title')
+    article = Articles.objects.get(slug=slug_title)
+    context = {
+        'title': article.title,
+        'html': article.html.replace('<html>', '')
+            .replace('<head>', '')
+            .replace('</html>', '')
+            .replace('</head>', '')
+            .replace('<body>', '')
+            .replace('</body>', '')
+    }
     return render(request=request, template_name=template_name, context=context)
+
+
+def tweak_sharing_article(request):
+    uuid = request.GET['uuid']
+    share = request.GET['share']
+    Articles.objects.filter(uuid__exact=uuid).update(is_shareable=True if share == 'true' else False)
+    return HttpResponseGone()
 
 
 # Put all class-based view right below
@@ -45,14 +69,17 @@ class ListArticles(View):
 
     def get(self, request, *args, **kwargs):
         articles = Articles.objects.filter(owner__username=request.user).values(
-            'uuid', 'title', 'publish_date', 'slug', 'owner__username'
+            'uuid', 'title', 'publish_date', 'slug', 'is_shareable', 'owner__username'
         ).order_by('publish_date')
         return render(request=request, template_name=self.template_name, context={
             'articles': articles
         })
 
 
-class CreateArticle(View):
+class CreateArticle(PermissionRequiredMixin, View):
+    permission_required = ('blog.add_articles', 'blog.change_articles')
+    permission_denied_message = 'Bạn không có quyền làm hành động này'
+
     template_name = 'blog/add-article.html'
 
     def get(self, request, *args, **kwargs):
@@ -93,8 +120,11 @@ def search_post(request, format=None):
         text_search = request.GET['text_search']
     except MultiValueDictKeyError:
         return HttpResponse(content='<b>Không có ?text_search=</b>', status=400)
-    result = Articles.objects.filter(Q(title__icontains=text_search) & Q(owner__username=request.user))
-    json_results = ArticleSerializer(instance=result, many=True)
+    results = Articles.objects.filter(
+        Q(title__icontains=text_search) & (Q(owner__username=request.user) | Q(is_shareable=True)))
+    for result in results:
+        result.publish_date = result.publish_date.astimezone().strftime('%d/%m/%Y, %H:%M:%S %P %A')
+    json_results = ArticleSerializer(instance=results, many=True)
     return Response(data=json_results.data)
 
 

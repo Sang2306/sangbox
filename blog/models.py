@@ -14,6 +14,7 @@ class Articles(models.Model):
     html = models.TextField(help_text='content for quick view', null=True)
     publish_date = models.DateTimeField(auto_now_add=True, help_text='publish date of a content')
     slug = models.SlugField(max_length=255, unique=True, help_text='This is used for SEO purposes')
+    is_shareable = models.BooleanField(default=False, help_text='mark if the article was able to share')
     owner = models.ForeignKey(
         to=User, on_delete=models.CASCADE, related_name='articles', help_text='owner of the article'
     )

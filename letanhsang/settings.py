@@ -29,7 +29,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'js)ljdp!rl1w4ayb#0wtckk_x#gu8+^3f5r1dp9(xf^c7$#-p#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+
+DEBUG = False
 
 host = '127.0.0.1'
 heroku_host = 'letanhsang.herokuapp.com'
@@ -176,6 +177,6 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = 'sangvnorgg@gmail.com'
+EMAIL_HOST_PASSWORD = 'vuotquakhokhan'
 EMAIL_USE_TLS = True
