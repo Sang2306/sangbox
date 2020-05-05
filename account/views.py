@@ -68,14 +68,3 @@ def add_user(request):
     user.user_permissions.add(add_articles, change_articles)
     user.save()
     return redirect(to='account:list-user')
-
-
-def reset_password(request):
-    #todo chua xai dc
-    send_mail(
-        subject="Testing thoi",
-        message='hello ban sang',
-        from_email=settings.EMAIL_HOST_USER,
-        recipient_list=['sang.tanhle@gmail.com'],
-    )
-    return HttpResponseGone()

@@ -30,7 +30,7 @@ SECRET_KEY = 'js)ljdp!rl1w4ayb#0wtckk_x#gu8+^3f5r1dp9(xf^c7$#-p#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = False
+DEBUG = True
 
 host = '127.0.0.1'
 
