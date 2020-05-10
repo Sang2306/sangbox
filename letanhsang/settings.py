@@ -156,3 +156,9 @@ CACHES = {
 }
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERED_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ]
+}
