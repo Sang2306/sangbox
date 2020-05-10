@@ -12,7 +12,7 @@ from django.utils.text import slugify
 from django.views.generic import View
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.status import HTTP_404_NOT_FOUND
+from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 
 from .models import Articles
 
@@ -138,3 +138,22 @@ def get_content_quick_view(request, *args, **kwargs):
         return Response(data=None, status=HTTP_404_NOT_FOUND)
     except MultiValueDictKeyError:
         return HttpResponse(content='<b>Không có ?uuid=</b>', status=400)
+
+
+@api_view(['GET'])
+def list_all_articles(request, format=None):
+    all_articles = Articles.objects.all().order_by('-publish_date')
+    limit = request.query_params.get('limit')
+    serializers = None
+    if limit is not None:
+        serializers = ArticleSerializer(all_articles[:int(limit)], many=True)
+    else:
+        serializers = ArticleSerializer(all_articles, many=True)
+    return Response(data={'articles': serializers.data}, status=HTTP_200_OK)
+
+
+@api_view(['GET'])
+def get_an_article(request, uuid=None):
+    an_article = Articles.objects.get(pk=uuid)
+    serializer = ArticleSerializer(an_article)
+    return Response(data={'article': serializer.data}, status=HTTP_200_OK)

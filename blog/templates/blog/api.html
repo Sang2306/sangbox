@@ -41,6 +41,26 @@
                     param <b>?uuid=</b>
                 </td>
             </tr>
+            <tr>
+                <th scope="row">3</th>
+                <td>{% url 'blog:dashboard:list_all_articles' %}</td>
+                <td>Lấy tất cả bài viết</td>
+                <td>
+                    method <b>GET</b>
+                    <br>
+                    param <b>?limit=</b>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">4</th>
+                <td>{% url 'blog:dashboard:get_an_article' 'cbb366fe-7271-4664-b0a8-9f3079d65c45' %}</td>
+                <td>Lấy nội dung của 1 bài viết</td>
+                <td>
+                    method <b>GET</b>
+                    <br>
+                    path uuid của bài viết <b>cbb366fe-7271-4664-b0a8-9f3079d65c45</b>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
