@@ -132,7 +132,7 @@ def search_post(request, format=None):
 def get_content_quick_view(request, *args, **kwargs):
     try:
         uuid = request.GET['uuid']
-        article = Articles.objects.values('title', 'html').get(uuid__exact=uuid)
+        article = Articles.objects.values('title', 'html', 'slug').get(uuid__exact=uuid)
         return Response(data=article)
     except ObjectDoesNotExist:
         return Response(data=None, status=HTTP_404_NOT_FOUND)
