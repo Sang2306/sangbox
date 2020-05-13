@@ -1,18 +1,18 @@
-import operator
-
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, Permission
 from django.contrib import messages
 from django.contrib.auth.views import LoginView, LogoutView
-from django.http import HttpResponseGone
+from django.http import HttpResponseGone, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django.core.mail import send_mail
 from django.conf import settings
 from django.views.generic import ListView
+
+from rest_framework.decorators import api_view
 
 
 class Login(LoginView):
@@ -68,3 +68,12 @@ def add_user(request):
     user.user_permissions.add(add_articles, change_articles)
     user.save()
     return redirect(to='account:list-user')
+
+
+@api_view(['POST'])
+def check_login(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    user = authenticate(request, username=username, password=password)
+    if user is not None and user.is_active:
+        return JsonResponse(data={'success':True}, status=202)
