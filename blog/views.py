@@ -1,6 +1,7 @@
 from datetime import tzinfo
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import HttpResponseGone
@@ -12,7 +13,8 @@ from django.utils.text import slugify
 from django.views.generic import View
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
+from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_201_CREATED, \
+                                    HTTP_204_NO_CONTENT
 
 from .models import Articles
 
@@ -52,6 +54,7 @@ def view_article(request, **kwargs):
             .replace('</head>', '')
             .replace('<body>', '')
             .replace('</body>', '')
+            .replace('contenteditable="true"', 'contenteditable="false"')
     }
     return render(request=request, template_name=template_name, context=context)
 
@@ -157,3 +160,44 @@ def get_an_article(request, uuid=None):
     an_article = Articles.objects.get(pk=uuid)
     serializer = ArticleSerializer(an_article)
     return Response(data={'article': serializer.data}, status=HTTP_200_OK)
+
+
+@api_view(['POST'])
+def update_or_create_an_article(request):
+
+    def has_one_is_none(*args):
+        for arg in args:
+            if arg is None:
+                return True
+        return False
+
+    try:
+        uuid = request.POST.get('uuid')
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        html = request.POST.get('html')
+        owner = request.POST.get('owner')
+        if has_one_is_none(title, content, html, owner):
+            return Response(data={'success': False}, status=HTTP_400_BAD_REQUEST)
+
+        _, created = Articles.objects.update_or_create(
+            defaults={
+                'title': title,
+                'content': content,
+                'html': html,
+                'owner': User.objects.get(id=owner)
+            }, uuid=uuid
+        )
+        if created:
+            return Response(data={'success': True, 'created': True}, status=HTTP_201_CREATED)
+        else:
+            return Response(data={'success': True, 'update': True}, status=HTTP_200_OK)
+    except Exception as e:
+        return Response(data={'success': False, 'extra': 'Không thể tạo hoặc chỉnh sửa'}, status=HTTP_400_BAD_REQUEST)
+
+
+@api_view(['delete'])
+def delete_the_article(request, uuid=None):
+    an_article = Articles.objects.get(pk=uuid)
+    an_article.delete()
+    return Response(data={'deleted': True}, status=HTTP_204_NO_CONTENT)

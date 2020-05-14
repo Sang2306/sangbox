@@ -71,6 +71,26 @@
                     <b>form-data: username, password</b>
                 </td>
             </tr>
+            <tr>
+                <th scope="row">4</th>
+                <td>{% url 'blog:dashboard:update-or-create-an-article' %}</td>
+                <td>Tạo hoặc chỉnh sửa bài viết</td>
+                <td>
+                    method <b>POST</b>
+                    <br>
+                    <b>form-data: uuid, title, content, html, owner: int</b>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">4</th>
+                <td>{% url 'blog:dashboard:delete-the-article' 'cbb366fe-7271-4664-b0a8-9f3079d65c45' %}</td>
+                <td>Xóa 1 bài viết</td>
+                <td>
+                    method <b>DELETE</b>
+                    <br>
+                    path uuid của bài viết <b>cbb366fe-7271-4664-b0a8-9f3079d65c45</b>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>

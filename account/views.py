@@ -76,4 +76,4 @@ def check_login(request):
     password = request.POST.get('password')
     user = authenticate(request, username=username, password=password)
     if user is not None and user.is_active:
-        return JsonResponse(data={'success':True}, status=202)
+        return JsonResponse(data={'success':True, 'user': user.id}, status=202)
