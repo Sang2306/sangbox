@@ -72,10 +72,12 @@ def add_user(request):
 
 @api_view(['POST'])
 def check_login(request):
-    username = request.POST.get('username')
-    password = request.POST.get('password')
-    if username is None or password is None:
+    try:
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None and user.is_active:
+            return JsonResponse(data={'success':True, 'user': user.id}, status=202)
+    except Exception as e:
         return JsonResponse(data={'success':False}, status=400)
-    user = authenticate(request, username=username, password=password)
-    if user is not None and user.is_active:
-        return JsonResponse(data={'success':True, 'user': user.id}, status=202)
+    return JsonResponse(data={'success':False}, status=404)
