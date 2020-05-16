@@ -196,7 +196,7 @@ def update_or_create_an_article(request):
         return Response(data={'success': False, 'extra': 'Không thể tạo hoặc chỉnh sửa'}, status=HTTP_400_BAD_REQUEST)
 
 
-@api_view(['delete'])
+@api_view(['delete', 'put', 'get'])
 def delete_the_article(request, uuid=None):
     an_article = Articles.objects.get(pk=uuid)
     an_article.delete()
