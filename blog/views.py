@@ -159,7 +159,7 @@ def list_all_articles(request, format=None):
 def get_an_article(request, uuid=None):
     an_article = Articles.objects.get(pk=uuid)
     serializer = ArticleSerializer(an_article)
-    return Response(data={'article': serializer.data}, status=HTTP_200_OK)
+    return Response(data=serializer.data, status=HTTP_200_OK)
 
 
 @api_view(['POST'])
