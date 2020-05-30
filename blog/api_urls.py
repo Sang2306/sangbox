@@ -10,7 +10,7 @@ from .views import search_post, get_content_quick_view, \
 					list_all_articles, get_an_article, update_or_create_an_article, delete_the_article
 
 urlpatterns = [
-    path('search-post/', login_required(search_post), name='search-post'),
+    path('search-post/', search_post, name='search-post'),
     path('get-content/', get_content_quick_view, name='get-content-quick-view'),
     path('list/', list_all_articles, name='list_all_articles'),
     path('article/<uuid:uuid>/', get_an_article, name='get_an_article'),
