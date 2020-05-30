@@ -128,7 +128,7 @@ def search_post(request, format=None):
     for result in results:
         result.publish_date = result.publish_date.astimezone().strftime('%d/%m/%Y, %H:%M:%S %P %A')
     json_results = ArticleSerializer(instance=results, many=True)
-    return Response(data=json_results.data)
+    return Response(data={'articles': json_results.data})
 
 
 @api_view(['GET'])
