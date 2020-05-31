@@ -14,9 +14,10 @@ import os
 
 import dj_database_url
 from django.utils.translation import gettext_lazy as _
-#load name=value fomr .env file
+# load name=value fomr .env file
 from dotenv import load_dotenv
 from pathlib import Path
+
 load_dotenv(dotenv_path=Path('.env'))
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -30,7 +31,7 @@ SECRET_KEY = 'js)ljdp!rl1w4ayb#0wtckk_x#gu8+^3f5r1dp9(xf^c7$#-p#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = True
+DEBUG = False
 
 host = '127.0.0.1'
 
@@ -160,5 +161,5 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 REST_FRAMEWORK = {
     'DEFAULT_RENDERED_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-    ]
+    ],
 }

@@ -11,10 +11,11 @@ from django.urls.base import reverse
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.text import slugify
 from django.views.generic import View
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_201_CREATED, \
-                                    HTTP_204_NO_CONTENT
+    HTTP_204_NO_CONTENT
 
 from .models import Articles
 
@@ -118,13 +119,14 @@ class CreateArticle(PermissionRequiredMixin, View):
 
 
 @api_view(['GET'])
+@renderer_classes([JSONRenderer])
 def search_post(request, format=None):
     try:
         text_search = request.GET['text_search']
     except MultiValueDictKeyError:
         return HttpResponse(content='<b>Không có ?text_search=</b>', status=400)
-    results = Articles.objects.filter(
-        Q(title__icontains=text_search) & (Q(owner__username=request.user) | Q(is_shareable=True)))
+    results = Articles.objects.filter(Q(slug__icontains=text_search))
+    # & (Q(owner__username=request.user) | Q(is_shareable=True))
     for result in results:
         result.publish_date = result.publish_date.astimezone().strftime('%d/%m/%Y, %H:%M:%S %P %A')
     json_results = ArticleSerializer(instance=results, many=True)
@@ -144,6 +146,7 @@ def get_content_quick_view(request, *args, **kwargs):
 
 
 @api_view(['GET'])
+@renderer_classes([JSONRenderer])
 def list_all_articles(request, format=None):
     all_articles = Articles.objects.all().order_by('-publish_date')
     limit = request.query_params.get('limit')
@@ -156,6 +159,7 @@ def list_all_articles(request, format=None):
 
 
 @api_view(['GET'])
+@renderer_classes([JSONRenderer])
 def get_an_article(request, uuid=None):
     an_article = Articles.objects.get(pk=uuid)
     serializer = ArticleSerializer(an_article)
@@ -164,7 +168,6 @@ def get_an_article(request, uuid=None):
 
 @api_view(['POST'])
 def update_or_create_an_article(request):
-
     def has_one_is_none(*args):
         for arg in args:
             if arg is None:
